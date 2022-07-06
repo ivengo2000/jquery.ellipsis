@@ -229,13 +229,22 @@
 
     // only bind to window resize if required
     if (base.opts.responsive) {
-
+      var $window = $(window);
+      var windowWidth = $window.width();
       /**
        * resize() resets necessary vars
        * and content and then re-initialises
        * the Ellipsis script
        */
       var resize = function() {
+        // Scrolling on iOS6+ fires the resize event. This ensures the width has actually changed
+        // before continuing. https://tinyurl.com/ios-scroll-resize
+        if ($window.width() === windowWidth) {
+          return;
+        }
+        
+        windowWidth = $window.width();
+        
         lines = [];
         currLine = 0;
         currOffset = null;
